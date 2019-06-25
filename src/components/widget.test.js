@@ -9,7 +9,7 @@ describe('<Widget />', () => {
     expect(widgetDom).toMatchSnapshot();
 
     {
-      const dockAnchorEl = widgetDom.find('a.dock');
+      const dockAnchorEl = widgetDom.find('button.dock');
       expect(dockAnchorEl).toHaveLength(1);
       // open widget
       dockAnchorEl.simulate('click');
@@ -20,18 +20,17 @@ describe('<Widget />', () => {
     // dock does not exist anymore
     expect(widgetDom.find('a.dock')).toHaveLength(0);
 
-    const closeAnchorEl = await waitForSelection(widgetDom, 'a.widget-header-icon');
+    const closeAnchorEl = await waitForSelection(widgetDom, 'button.widget-header-icon');
 
     expect(closeAnchorEl).toHaveLength(1);
     // close widget
     closeAnchorEl.simulate('click');
 
     {
-      const dockAnchorEl = await waitForSelection(widgetDom, 'a.dock');
-     expect(dockAnchorEl).toHaveLength(1);
+      const dockAnchorEl = await waitForSelection(widgetDom, 'button.dock');
+      expect(dockAnchorEl).toHaveLength(1);
     }
 
     expect(widgetDom).toMatchSnapshot();
   });
-
 });
