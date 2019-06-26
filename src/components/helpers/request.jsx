@@ -15,7 +15,7 @@ export const requestPublic = (_settings = {}) => {
 		method: 'get',
 		data: {}
 	}, _settings)
-console.log('process.env.RADPLAID_CLIENT_ID ', process.env.RADPLAID_CLIENT_ID)
+
 	return superagent[settings.method](`${process.env.BASE_SERVER_URL}/${process.env.API_VERSION}${settings.path}`)
 		.timeout(timeoutOptions)
 		.set('Content-Type', 'application/json')

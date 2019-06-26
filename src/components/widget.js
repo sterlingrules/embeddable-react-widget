@@ -4,17 +4,31 @@ import InfiniteScroll from 'react-infinite-scroller'
 import { Loader } from './common/loader'
 import { requestPublic } from './helpers/request'
 import { getCurrentDate } from './helpers'
+import SearchSummary from './show/search-summary'
 import ShowItem from './show/showitem'
 import './scss/index.scss'
 
 class Widget extends Component {
 	state = {
+		sort: 'all',
 		shows: [],
+		page: 0,
 		isEnd: false
 	}
 
-	componentWillMount() {
-		requestPublic({ path: `/shows?sort=all&page=1&from=${getCurrentDate()}` })
+	onLoadMore = () => {
+		let { query, venue, location } = this.props
+		let { sort, shows, page, afterPage, after } = this.state
+		let path = `/search/shows?query=${query}&venue=${venue}&sort=${sort}&page=${afterPage || page}`
+
+		if (after) {
+			path += `&after=${after}`
+		}
+		else {
+			path += `&from=${getCurrentDate()}`
+		}
+
+		requestPublic({ path })
 			.end((err, reply) => {
 				if (err) {
 					return console.error('err ', err)
@@ -22,19 +36,19 @@ class Widget extends Component {
 
 				const { body } = reply
 
-				this.setState({ ...body })
+				shows = shows.concat(body.shows || [])
+
+				this.setState({ ...body, shows })
 			})
 	}
 
-	onLoadMore = () => {
-		// asdf
-	}
-
 	render() {
-		const { shows, isEnd } = this.state
+		const canTouch = ('ontouchstart' in window)
+		const { shows, summary, isEnd } = this.state
 		const style = {
 			display: 'block',
 			margin: 'auto',
+			marginTop: 16,
 			marginRight: 0,
 			height: 36,
 			width: 216,
@@ -43,15 +57,18 @@ class Widget extends Component {
 			backgroundSize: 'cover',
 		}
 
-		console.log('shows ', shows)
-
 		return (
-			<div ref={node => this.parentEl = node}>
+			<div className={canTouch ? 'touch' : 'no-touch'} ref={node => this.parentEl = node}>
+				{summary && (
+					<SearchSummary summary={summary} />
+				)}
+
 				<InfiniteScroll
 					pageStart={0}
 					threshold={typeof window === 'undefined' ? 980 : window.innerHeight}
 					loadMore={this.onLoadMore}
 					hasMore={!isEnd}
+					useWindow={true}
 					className="showlist list relative"
 					loader={
 						<li
@@ -61,8 +78,8 @@ class Widget extends Component {
 						</li>
 					}>
 
-					{shows.map(show => (
-						<ShowItem key={show.id} {...show} />
+					{shows.map((show, index) => (
+						<ShowItem key={`${index}:${show.id}`} {...show} />
 					))}
 
 				</InfiniteScroll>
@@ -161,9 +178,7 @@ Widget.propTypes = {
 }
 
 Widget.defaultProps = {
-	headerText: 'Header',
-	bodyText: 'Body',
-	footerText: 'Footer'
+	location: 'Portland, ME'
 }
 
 export default Widget
