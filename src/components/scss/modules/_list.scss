@@ -1,10 +1,18 @@
 .rp-parent {
 	overflow: auto;
 	position: relative;
+
+	&.theme-dark {
+		color: color(white);
+	}
 }
 
 .sponsor-block {
 	margin-bottom: 0.4rem;
+}
+
+.list-scroll {
+	overflow: auto;
 }
 
 //
@@ -58,11 +66,12 @@
 .search-summary {
 	overflow: auto;
 	display: flex;
+	align-items: center;
 	position: sticky;
 	top: 0;
 	margin: 0;
 	padding: 1.2rem 0.5rem 0.8rem;
-	background-color: color(white);
+	background-color: transparent;
 
 	.search-summary-content {
 		box-sizing: border-box;
@@ -100,6 +109,7 @@
 	padding: 1rem 0.6rem;
 	color: color(copy);
 	border-top: 1px solid color(keyline);
+	transform: translateZ(0);
 
 	.listitem-content {
 		@include typography(body);
@@ -142,9 +152,26 @@
 		border-top: none;
 	}
 
+	.theme-dark & {
+		color: color(white);
+		border-top: 1px solid lighten(color(black), 10%);
+
+		.listitem-content {
+			color: color(white);
+		}
+
+		.listitem-ryc {
+			color: color(accent-three);
+		}
+
+		&:first-child {
+			border-top: none;
+		}
+	}
+
 	@include can-hover() {
 		&:not(.listitem--headline):hover {
-			background-color: lighten(color(keyline), 5%);
+			background-color: rgba(lighten(color(keyline), 5%), 0.4);
 		}
 	}
 
@@ -160,5 +187,11 @@
 				margin-top: 0.6rem;
 			}
 		}
+	}
+}
+
+.theme-dark.no-touch {
+	.listitem:not(.listitem--headline):hover {
+		background-color: lighten(color(black), 15%);
 	}
 }

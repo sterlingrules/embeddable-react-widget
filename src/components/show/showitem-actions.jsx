@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import { track } from './../helpers/analytics'
 
-const TicketButton = (props) => {
+const ShowItemActions = (props) => {
 	const {
 		value,
 		slug,
@@ -56,7 +56,7 @@ const TicketButton = (props) => {
 			target="_blank"
 			style={buttonStyle}
 			onClick={onClick}>
-			Play
+			Listen
 		</a>
 	) : (
 		<a
@@ -72,4 +72,4 @@ const TicketButton = (props) => {
 	)
 }
 
-export default TicketButton
+export default ShowItemActions

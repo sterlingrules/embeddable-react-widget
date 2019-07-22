@@ -84,39 +84,45 @@ class Widget extends Component {
 	render() {
 		const canTouch = ('ontouchstart' in window)
 		const { shows, summary, elementSize, isEnd } = this.state
+		const { theme, logoColor, maxHeight } = this.props
+		const style = maxHeight ? { maxHeight } : {}
 
 		return (
-			<div className={`rp-parent ${elementSize} ${canTouch ? 'touch' : 'no-touch'}`} ref={node => this.parentEl = node}>
+			<div className={`rp-parent ${elementSize} ${canTouch ? 'touch' : 'no-touch'} theme-${theme}`} ref={node => this.parentEl = node}>
 				{summary && (
 					<SearchSummary
 						summary={summary} />
 				)}
 
-				<InfiniteScroll
-					pageStart={0}
-					threshold={typeof window === 'undefined' ? 980 : window.innerHeight}
-					loadMore={this.onLoadMore}
-					hasMore={!isEnd}
-					useWindow={true}
-					className="showlist list relative"
-					loader={
-						<li
-							key={Math.round(Math.random() * 1000)}
-							className="showlist-endcap">
-							<Loader size="small" />
-						</li>
-					}>
+				<div className="list-scroll" style={style}>
+					<InfiniteScroll
+						pageStart={0}
+						threshold={typeof window === 'undefined' ? 980 : window.innerHeight}
+						loadMore={this.onLoadMore}
+						hasMore={!isEnd}
+						useWindow={!(maxHeight)}
+						className="showlist list relative"
+						loader={
+							<li
+								key={Math.round(Math.random() * 1000)}
+								className="showlist-endcap">
+								<Loader size="small" />
+							</li>
+						}>
 
-					{shows.map((show, index) => (
-						<ShowItem
-							key={`${index}:${show.id}`}
-							{...this.props}
-							{...show} />
-					))}
+						{shows.map((show, index) => (
+							<ShowItem
+								key={`${index}:${show.id}`}
+								{...this.props}
+								{...show} />
+						))}
 
-				</InfiniteScroll>
+					</InfiniteScroll>
+				</div>
 
-				<Logo />
+				<Logo
+					logoColor={logoColor}
+					theme={theme} />
 			</div>
 		)
 	}
@@ -141,8 +147,11 @@ Widget.propTypes = {
 	logoType: PropTypes.string,
 }
 
+// Theme: Light
 Widget.defaultProps = {
 	parentElement: '#rp-root',
+	theme: 'color',
+	maxHeight: '',
 
 	// Query
 	query: '',
@@ -158,7 +167,28 @@ Widget.defaultProps = {
 	keylineColor: '#d3e1e7',
 	buttonTextColor: '',
 	buttonBackground: '',
-	logoType: '',
+	logoColor: '',
 }
+
+// Theme: Dark
+// Widget.defaultProps = {
+// 	parentElement: '#rp-root',
+// 	theme: 'dark',
+
+// 	// Query
+// 	query: '',
+// 	venue: '',
+// 	location: 'Portland, ME',
+// 	cost: '',
+// 	tag: '',
+// 	genre: '',
+
+// 	// Style
+// 	primaryColor: '#3f5765',
+// 	accentColor: '#8b61a9',
+// 	keylineColor: '#d3e1e7',
+// 	buttonTextColor: '',
+// 	buttonBackground: '',
+// }
 
 export default Widget

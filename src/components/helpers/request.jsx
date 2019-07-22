@@ -16,7 +16,8 @@ export const requestPublic = (_settings = {}) => {
 		data: {}
 	}, _settings)
 
-	return superagent[settings.method](`${process.env.BASE_SERVER_URL}/${process.env.API_VERSION}${settings.path}`)
+	// return superagent[settings.method](`${process.env.BASE_SERVER_URL}/${process.env.API_VERSION}${settings.path}`)
+	return superagent[settings.method](`http://localhost:8000/${process.env.API_VERSION}${settings.path}`)
 		.timeout(timeoutOptions)
 		.set('Content-Type', 'application/json')
 		.set('x-radplaid-client-id', process.env.RADPLAID_CLIENT_ID)

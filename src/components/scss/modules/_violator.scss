@@ -84,3 +84,33 @@ a.violator {
 		@include typography(tiny-headline);
 	}
 }
+
+.theme-light {
+	.violator,
+	a.violator {
+		&,
+		&.violator--reason,
+		&.violator--location,
+		&.violator--genre {
+			color: color(white);
+			background-color: color(copy);
+		}
+	}
+}
+
+.theme-dark {
+	.violator,
+	a.violator {
+		&,
+		&.violator--reason,
+		&.violator--location,
+		&.violator--genre {
+			color: color(copy);
+			background-color: color(white);
+		}
+
+		&.violator--radplaid {
+			color: color(white);
+		}
+	}
+}

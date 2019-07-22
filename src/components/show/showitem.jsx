@@ -1,6 +1,6 @@
 import moment from 'moment'
 import React, { Component } from 'react'
-import TicketButton from './ticket-button'
+import ShowItemActions from './showitem-actions'
 
 const DateStack = ({ date, listColor = {} }) => {
 	return (
@@ -98,7 +98,7 @@ export const ShowItem = (props) => {
 							target="_blank">
 							Follow
 						</a>
-						<TicketButton
+						<ShowItemActions
 							slug={props.slug}
 							url={props.ticket_url}
 							affiliate={props.ticket_affiliate}
