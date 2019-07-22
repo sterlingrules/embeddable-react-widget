@@ -4,12 +4,27 @@
 		<title>Embeddable Widget</title>
 	</head>
 	<body>
+		<div id="rp-root"></div>
 		<script src="./widget.js"></script>
 		<script>
 			EmbeddableWidget.mount({
+				parentElement: '#rp-root',
+
+				// Query
 				query: '',
-				venue: 'Port City Music Hall',
-				location: 'Portland, ME'
+				venue: '',
+				location: 'Portland, ME',
+				cost: '',
+				tag: '',
+				genre: '',
+
+				// Style
+				primaryColor: '',
+				accentColor: '',
+				keylineColor: '',
+				buttonTextColor: '',
+				buttonBackground: '',
+				logoType: '',
 			})
 		</script>
 	</body>

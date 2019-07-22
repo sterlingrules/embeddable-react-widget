@@ -1,6 +1,7 @@
 require('dotenv').config()
 
 const webpack = require('webpack')
+const MomentLocalesPlugin = require('moment-locales-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const increaseSpecificity = require('postcss-increase-specificity')
 const JavaScriptObfuscator = require('webpack-obfuscator')
@@ -52,6 +53,10 @@ const defaultConfig = {
 		port: 9000,
 	},
 	plugins: [
+		new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+		new MomentLocalesPlugin({
+			localesToKeep: [ 'en' ]
+		}),
 		new MiniCssExtractPlugin({
 			// Options similar to the same options in webpackOptions.output
 			// both options are optional

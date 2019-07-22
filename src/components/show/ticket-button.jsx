@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react'
+import { track } from './../helpers/analytics'
 
 const TicketButton = (props) => {
 	const {
@@ -11,47 +12,60 @@ const TicketButton = (props) => {
 		doorPrice,
 		isFree = false,
 		isPlayable = false,
+		buttonStyle = {}
 	} = props
 
-	const onClick = () => {
-		// track('show_item', {
-		// 	action: 'ticket',
-		// 	source: source || null,
-		// 	show_id: slug
-		// })
+	const hostname = (typeof window !== 'undefined') ? window.location.hostname : 'website'
+	const onClick = ({ name }) => {
+		track('show_item', {
+			action: name,
+			source: 'widget',
+			show_id: slug
+		})
 	}
 
 	return (affiliate || url) ? (
 		<a
-			href={affiliate || url}
+			href={`${affiliate || url}?utm_source=ticket&utm_medium=widget&utm_campaign=${hostname}`}
 			className={`btn btn-action btn--buy btn--small`}
 			title="Get Tickets"
 			data-action="Get Tickets"
+			name="tickets"
 			target="_blank"
+			style={buttonStyle}
 			onClick={onClick}>
 			Tickets
 		</a>
 	) : isFree ? (
-		<div
-			className={`btn btn--accent-three btn--small pointerevent-none`}
-			title="Free">
+		<a
+			href={`https://getradplaid.com/shows/${slug}?utm_source=free&utm_medium=widget&utm_campaign=${hostname}`}
+			className={`btn btn--accent-three btn--small`}
+			title="Free"
+			name="free"
+			target="_blank"
+			style={buttonStyle}
+			onClick={onClick}>
 			Free
-		</div>
+		</a>
 	) : isPlayable ? (
 		<a
-			href={`https://getradplaid.com/shows/${slug}`}
+			href={`https://getradplaid.com/shows/${slug}?utm_source=play&utm_medium=widget&utm_campaign=${hostname}`}
 			className={`btn btn-action btn--accent btn--small`}
-			title="Visit Show"
+			title="Play"
+			name="play"
 			target="_blank"
+			style={buttonStyle}
 			onClick={onClick}>
 			Play
 		</a>
 	) : (
 		<a
-			href={`https://getradplaid.com/shows/${slug}`}
+			href={`https://getradplaid.com/shows/${slug}?utm_source=view&utm_medium=widget&utm_campaign=${hostname}`}
 			className={`btn btn-action btn--accept btn--small`}
 			title="Visit Show"
+			name="view"
 			target="_blank"
+			style={buttonStyle}
 			onClick={onClick}>
 			View
 		</a>

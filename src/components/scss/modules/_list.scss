@@ -1,3 +1,12 @@
+.rp-parent {
+	overflow: auto;
+	position: relative;
+}
+
+.sponsor-block {
+	margin-bottom: 0.4rem;
+}
+
 //
 // Showlist
 //
@@ -13,9 +22,17 @@
 // Date Stack
 //
 .datestack {
+	position: relative;
+	z-index: auto;
+	left: auto;
+	bottom: auto;
+	min-width: 48px;
 	padding: 0.5rem;
 	padding-right: 2rem;
 	text-align: center;
+	background-color: transparent;
+	box-shadow: none;
+	border-radius: 0;
 
 	.datestack-small {
 		@include typography(tiny);
@@ -40,11 +57,18 @@
 //
 .search-summary {
 	overflow: auto;
+	display: flex;
+	position: sticky;
+	top: 0;
+	margin: 0;
+	padding: 1.2rem 0.5rem 0.8rem;
+	background-color: color(white);
 
 	.search-summary-content {
 		box-sizing: border-box;
+		flex-grow: 1;
+		padding: 0;
 		white-space: nowrap;
-		padding: 1.2rem 0.5rem 0.8rem;
 	}
 
 	.violator {
@@ -54,10 +78,7 @@
 		border-radius: 14px;
 	}
 
-	@include small() {
-		top: map-get($header-height, 'small');
-		margin-right: -2.5vw;
-
+	.small & {
 		.search-summary-content {
 			padding: 0.8rem 0;
 		}
@@ -127,17 +148,17 @@
 		}
 	}
 
-	// @include small() {
-	// 	.listitem-action {
-	// 		flex-direction: column;
+	@include small() {
+		.listitem-action {
+			flex-direction: column;
 
-	// 		.btn {
-	// 			margin-left: 0;
-	// 		}
+			.btn {
+				margin-left: 0;
+			}
 
-	// 		.btn + .btn {
-	// 			margin-top: 0.6rem;
-	// 		}
-	// 	}
-	// }
+			.btn + .btn {
+				margin-top: 0.6rem;
+			}
+		}
+	}
 }

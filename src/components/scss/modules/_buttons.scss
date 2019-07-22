@@ -21,6 +21,7 @@
 	background-color: transparent;
 	border: 2px solid color(white);
 	border-radius: $border-width;
+	box-shadow: none;
 	transition: all 0.1s ease-in-out 0s;
 	transition-property:
 		fill,
@@ -57,10 +58,6 @@ a.btn {
 		display: inline-block;
 		margin-top: -0.2rem;
 		margin-right: 0.4rem;
-
-		&:last-child {
-			margin-right: 0;
-		}
 	}
 
 	@include can-hover() {
