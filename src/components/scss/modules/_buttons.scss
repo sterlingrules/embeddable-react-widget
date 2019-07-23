@@ -156,7 +156,6 @@ a.btn {
 		}
 	}
 
-	// TODO: WIP
 	&.btn--gradient {
 		@include gradient();
 		color: color(white);
@@ -168,6 +167,10 @@ a.btn {
 				border-color: rgb(246,166,146);
 			}
 		}
+	}
+
+	&.btn--round {
+		border-radius: 18px;
 	}
 
 	&.btn--error {
@@ -211,6 +214,16 @@ a.btn {
 
 		@include small() {
 			line-height: $-btn-min-height-small;
+		}
+	}
+
+	.tiny & {
+		.icon {
+			margin-right: 0;
+		}
+
+		.text {
+			display: none;
 		}
 	}
 }

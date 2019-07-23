@@ -58,6 +58,10 @@
 	.datestack-large {
 		line-height: 1;
 	}
+
+	.small & {
+		display: none;
+	}
 }
 
 //
@@ -88,8 +92,9 @@
 	}
 
 	.small & {
-		.search-summary-content {
-			padding: 0.8rem 0;
+		.search-summary-content .violator {
+			display: none;
+			// padding: 0.8rem 0;
 		}
 	}
 }
@@ -175,12 +180,27 @@
 		}
 	}
 
-	@include small() {
+	.small & {
+		.listitem-content {
+			.listitem-title {
+				@include typography(hero-body-headline);
+				margin: 0.2rem 0;
+			}
+
+			.listitem-date,
+			.listitem-venue {
+				@include typography(small);
+			}
+		}
+
 		.listitem-action {
 			flex-direction: column;
 
-			.btn {
+			.btn,
+			a.btn {
 				margin-left: 0;
+				line-height: 24px;
+				min-height: 24px;
 			}
 
 			.btn + .btn {
@@ -192,6 +212,6 @@
 
 .theme-dark.no-touch {
 	.listitem:not(.listitem--headline):hover {
-		background-color: lighten(color(black), 15%);
+		background-color: rgba(lighten(color(black), 15%), 0.4);
 	}
 }

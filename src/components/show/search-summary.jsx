@@ -16,7 +16,7 @@ const SearchSummary = ({ summary }) => {
 			</div>
 			<a
 				href={`https://getradplaid.com/add/1?utm_source=add&utm_medium=widget&utm_campaign=${hostname}`}
-				className="btn btn--accent">
+				className="btn btn--accent btn--round">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					className="icon"
@@ -27,7 +27,7 @@ const SearchSummary = ({ summary }) => {
 					focusable="false">
 					<path d="M38 26H26v12h-4V26H10v-4h12V10h4v12h12v4z"/>
 				</svg>
-				Add Show
+				<span className="text">Add Show</span>
 			</a>
 		</div>
 	)

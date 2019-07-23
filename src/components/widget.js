@@ -40,6 +40,7 @@ class Widget extends Component {
 		}
 
 		this.parentEl.addEventListener('resize', this.setMetrics, false)
+		this.setMetrics()
 	}
 
 	setMetrics = () => {
@@ -48,7 +49,7 @@ class Widget extends Component {
 		}
 
 		const width = this.parentEl.offsetWidth
-		const elementSize = width > 600 ? 'large' : 'small'
+		const elementSize = width > 600 ? 'large' : width > 350 ? 'small' : 'small tiny'
 
 		this.setState({ elementSize })
 	}
@@ -113,6 +114,7 @@ class Widget extends Component {
 						{shows.map((show, index) => (
 							<ShowItem
 								key={`${index}:${show.id}`}
+								elementSize={elementSize}
 								{...this.props}
 								{...show} />
 						))}

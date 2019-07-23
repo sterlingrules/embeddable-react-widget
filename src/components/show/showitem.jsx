@@ -84,6 +84,7 @@ export const ShowItem = (props) => {
 							<div className="listitem-ryc" style={rycColor}>{props.reason}</div>
 						)}
 
+						<div className="listitem-date" style={listColor}>{moment(props.date).format('ddd, MMMM D, YYYY')}</div>
 						<div className="listitem-title" style={listColor}>{props.title}</div>
 
 						{props.venue && (
@@ -91,13 +92,16 @@ export const ShowItem = (props) => {
 						)}
 					</a>
 					<div className="listitem-action">
-						<a
-							href={`https://getradplaid.com/shows/${props.slug}`}
-							className="btn btn--accept btn--knockout btn--small"
-							style={buttonEmptyStyle}
-							target="_blank">
-							Follow
-						</a>
+						{(props.elementSize !== 'small tiny') && (
+							<a
+								href={`https://getradplaid.com/shows/${props.slug}`}
+								className="btn btn--accept btn--knockout btn--small"
+								style={buttonEmptyStyle}
+								target="_blank">
+								Follow
+							</a>
+						)}
+
 						<ShowItemActions
 							slug={props.slug}
 							url={props.ticket_url}
@@ -106,6 +110,7 @@ export const ShowItem = (props) => {
 							doorPrice={props.door_price}
 							isFree={(!props.advance_price && !props.door_price)}
 							isPlayable={isPlayable}
+							elementSize={props.elementSize}
 							style={buttonStyle}
 							source="show_item" />
 					</div>
