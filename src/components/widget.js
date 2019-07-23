@@ -79,20 +79,22 @@ class Widget extends Component {
 				shows = shows.concat(body.shows || [])
 
 				this.setState({ ...body, shows })
+				this.setMetrics()
 			})
 	}
 
 	render() {
 		const canTouch = ('ontouchstart' in window)
 		const { shows, summary, elementSize, isEnd } = this.state
-		const { theme, logoColor, maxHeight } = this.props
+		const { theme, logoColor, maxHeight, title } = this.props
 		const style = maxHeight ? { maxHeight } : {}
 
 		return (
 			<div className={`rp-parent ${elementSize} ${canTouch ? 'touch' : 'no-touch'} theme-${theme}`} ref={node => this.parentEl = node}>
 				{summary && (
 					<SearchSummary
-						summary={summary} />
+						summary={summary}
+						title={title} />
 				)}
 
 				<div className="list-scroll" style={style}>
@@ -153,6 +155,7 @@ Widget.propTypes = {
 Widget.defaultProps = {
 	parentElement: '#rp-root',
 	theme: 'color',
+	title: '',
 	maxHeight: '',
 
 	// Query

@@ -1,14 +1,16 @@
 import React from 'react'
 import { getDateTitle } from './../helpers'
 
-const SearchSummary = ({ summary }) => {
+const SearchSummary = ({ title, summary }) => {
 	const keys = Object.keys(summary)
 	const hostname = (typeof window !== 'undefined') ? window.location.hostname : 'website'
 
 	return (
 		<div className="search-summary">
 			<div className="search-summary-content">
-				{keys.map((key, index) => (
+				{title ? (
+					<div className="headline text-ellipsis">{title}</div>
+				) : keys.map((key, index) => (
 					<div key={index} className={`violator violator--${key}`}>
 						{key === 'date' ? getDateTitle(summary[key]) : summary[key]}
 					</div>

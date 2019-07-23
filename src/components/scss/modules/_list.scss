@@ -1,6 +1,7 @@
 .rp-parent {
 	overflow: auto;
 	position: relative;
+	color: color(copy);
 
 	&.theme-dark {
 		color: color(white);
@@ -84,6 +85,11 @@
 		white-space: nowrap;
 	}
 
+	.headline {
+		@include typography(subheadline);
+		color: color(copy);
+	}
+
 	.violator {
 		@include typography(small-headline);
 		margin-right: 0.5rem;
@@ -94,7 +100,16 @@
 	.small & {
 		.search-summary-content .violator {
 			display: none;
-			// padding: 0.8rem 0;
+		}
+
+		.headline {
+			@include typography(hero-body-headline);
+		}
+	}
+
+	.theme-dark & {
+		.headline {
+			color: color(white);
 		}
 	}
 }
