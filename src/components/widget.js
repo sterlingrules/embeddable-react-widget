@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import InfiniteScroll from 'react-infinite-scroller'
 import { Loader } from './common/loader'
 import { requestPublic } from './helpers/request'
-import { getCurrentDate } from './helpers'
+import { getCurrentDate, delay } from './helpers'
 import SearchSummary from './show/search-summary'
 import ShowItem from './show/showitem'
 import Logo from './show/logo'
@@ -51,7 +51,13 @@ class Widget extends Component {
 		const width = this.parentEl.offsetWidth
 		const elementSize = width > 600 ? 'large' : width > 350 ? 'small' : 'small tiny'
 
-		this.setState({ elementSize })
+		if (this.prevElementSize !== elementSize) {
+			this.setState({ elementSize })
+		}
+
+		this.prevElementSize = elementSize
+
+		delay(this.setMetrics, 300)
 	}
 
 	onLoadMore = () => {

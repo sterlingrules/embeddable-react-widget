@@ -18,6 +18,7 @@ const SearchSummary = ({ title, summary }) => {
 			</div>
 			<a
 				href={`https://getradplaid.com/add/1?utm_source=add&utm_medium=widget&utm_campaign=${hostname}`}
+				target="_blank"
 				className="btn btn--accent btn--round">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
