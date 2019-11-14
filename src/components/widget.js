@@ -1,9 +1,14 @@
+import uniqBy from 'lodash/uniqBy'
+import isArray from 'lodash/isArray'
+import isEqual from 'lodash/isEqual'
+
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import InfiniteScroll from 'react-infinite-scroller'
 import { Loader } from './common/loader'
-import { requestPublic } from './helpers/request'
-import { getCurrentDate, delay } from './helpers'
+import { requestPublic, requestSimple } from './helpers/request'
+import { isMobile } from './helpers/device-detect'
+import { getCurrentDate, delay, events } from './helpers'
 import SearchSummary from './show/search-summary'
 import ShowItem from './show/showitem'
 import Logo from './show/logo'
@@ -17,21 +22,51 @@ const getSize = (width) => {
 	return 'small'
 }
 
+const setFeaturedShow = (featuredShows, shows, currentSlugs = [], offsetIndex = 0) => {
+	if (!featuredShows.length) {
+		return shows
+	}
+
+	featuredShows = featuredShows.filter(s => (currentSlugs.indexOf(s.slug) < 0))
+
+	if (featuredShows.length > 0) {
+		let showIndex = 0
+		let randomIndex = Math.floor(Math.random() * featuredShows.length)
+
+		for (let i = 0; i < shows.length; i++) {
+			if (showIndex === (1 + offsetIndex)) {
+				featuredShows[randomIndex].type = 'sponsored'
+				shows = shows.filter(s => s.slug !== featuredShows[randomIndex].slug)
+				shows.splice(i, 0, featuredShows[randomIndex])
+
+				break
+			}
+
+			if (shows[i].type === 'show') {
+				showIndex++
+			}
+		}
+	}
+
+	return shows
+}
+
 class Widget extends Component {
 	state = {
 		sort: 'all',
 		shows: [],
+		featuredShows: [],
 		page: 0,
+		connection: true,
+		isLoading: false,
 		isEnd: false,
 		elementSize: 'large'
 	}
 
-	componentWillUnmount() {
-		if (!this.parentEl) {
-			return
-		}
+	constructor(props) {
+		super(props)
 
-		this.parentEl.removeEventListener('resize', this.setMetrics, false)
+		this.isLoading = false
 	}
 
 	componentDidMount() {
@@ -39,8 +74,17 @@ class Widget extends Component {
 			return
 		}
 
-		this.parentEl.addEventListener('resize', this.setMetrics, false)
+		this.setEventListeners()
 		this.setMetrics()
+		this.onLoadMore()
+	}
+
+	componentWillUnmount() {
+		if (!this.parentEl) {
+			return
+		}
+
+		this.setEventListeners('remove')
 	}
 
 	setMetrics = () => {
@@ -60,11 +104,34 @@ class Widget extends Component {
 		delay(this.setMetrics, 300)
 	}
 
+	setConnection = (connection) => {
+		this.setState({ connection })
+
+		if (!connection) {
+			return setTimeout(() => {
+				const callback = (err, reply) => {
+					let isConnected = !!(reply && reply.status === 200)
+
+					this.setConnection(isConnected)
+
+					if (isConnected) {
+						return this.onLoadMore()
+					}
+				}
+
+				requestSimple('/check-connection')
+					.end(callback)
+			}, 5000)
+		}
+	}
+
 	onLoadMore = () => {
 		const { query, venue, location, cost, tag, genre } = this.props
-		const { sort, page, afterPage, after } = this.state
+		const { sort, page, afterPage, after, isLoading } = this.state
 
-		let { shows } = this.state
+		let offsetIndex = 0
+		let { shows, featuredShows } = this.state
+		let currentSlugs = []
 		let path = `/search/shows?query=${query}&location=${location}&venue=${venue}&cost=${cost}&tag=${tag}&genre=${genre}&sort=${sort}&page=${afterPage || page}`
 
 		if (after) {
@@ -74,24 +141,68 @@ class Widget extends Component {
 			path += `&from=${getCurrentDate()}`
 		}
 
+		if (this.isLoading) {
+			return
+		}
+
+		this.isLoading = true
+
 		requestPublic({ path })
 			.end((err, reply) => {
+				this.isLoading = false
+
 				if (err) {
-					return console.error('err ', err)
+					this.setConnection(false)
+					return
 				}
 
 				const { body } = reply
 
-				shows = shows.concat(body.shows || [])
+				featuredShows = (isArray(body.featuredShows) && body.featuredShows.length > 0) ? body.featuredShows : featuredShows
+				offsetIndex = Math.max(shows.length - 1, 0)
+				shows = uniqBy(shows.concat(body.shows || []), 'slug')
+				currentSlugs = shows.map(s => s.slug)
+				shows = setFeaturedShow(featuredShows, shows, currentSlugs, offsetIndex)
 
-				this.setState({ ...body, shows })
+				this.setState({
+					...body,
+					featuredShows,
+					shows
+				})
+
 				this.setMetrics()
 			})
 	}
 
+	setEventListeners = (state = 'add') => {
+		if (!this.scrollEl) {
+			return
+		}
+
+		this.scrollEl[`${state}EventListener`]('scroll', () => {
+			if (isMobile) {
+				return
+			}
+
+			events.publish('scroll', {
+				top: this.scrollEl.scrollTop,
+				type: 'scroll'
+			})
+		})
+
+		this.scrollEl[`${state}EventListener`]('touchmove', () => {
+			events.publish('scroll', {
+				top: this.scrollEl.scrollTop,
+				type: 'touchmove'
+			})
+		})
+
+		this.parentEl[`${state}EventListener`]('resize', this.setMetrics, false)
+	}
+
 	render() {
 		const canTouch = ('ontouchstart' in window)
-		const { shows, summary, elementSize, isEnd } = this.state
+		const { shows, summary, elementSize, isLoading, isEnd, connection } = this.state
 		const { theme, logoColor, maxHeight, title } = this.props
 		const style = maxHeight ? { maxHeight } : {}
 
@@ -103,12 +214,13 @@ class Widget extends Component {
 						title={title} />
 				)}
 
-				<div className="list-scroll" style={style}>
+				<div className="list-scroll" style={style} ref={node => this.scrollEl = node}>
 					<InfiniteScroll
+						initialLoad={true}
 						pageStart={0}
 						threshold={typeof window === 'undefined' ? 980 : window.innerHeight}
 						loadMore={this.onLoadMore}
-						hasMore={!isEnd}
+						hasMore={(!isEnd && !this.isLoading && connection)}
 						useWindow={!(maxHeight)}
 						className="showlist list relative"
 						loader={
@@ -122,6 +234,7 @@ class Widget extends Component {
 						{shows.map((show, index) => (
 							<ShowItem
 								key={`${index}:${show.id}`}
+								index={index}
 								elementSize={elementSize}
 								{...this.props}
 								{...show} />

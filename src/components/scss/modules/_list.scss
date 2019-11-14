@@ -168,9 +168,9 @@
 		}
 	}
 
-	&:first-child {
-		border-top: none;
-	}
+	// &:first-child {
+	// 	border-top: none;
+	// }
 
 	.theme-dark & {
 		color: color(white);
@@ -184,9 +184,9 @@
 			color: color(accent-three);
 		}
 
-		&:first-child {
-			border-top: none;
-		}
+		// &:first-child {
+		// 	border-top: none;
+		// }
 	}
 
 	@include can-hover() {

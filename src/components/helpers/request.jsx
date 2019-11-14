@@ -84,3 +84,15 @@ export const request = (_settings = {}) => {
 		.on('error', apiError)
 		.send(settings.data)
 }
+
+export const requestSimple = (path, callback) => {
+	let settings = {
+		path,
+		method: 'get',
+	}
+
+	return superagent[settings.method](`${process.env.BASE_SERVER_URL}/${process.env.API_VERSION}${settings.path}`)
+		.timeout(timeoutOptions)
+		.set('Content-Type', 'application/json')
+		.set('x-radplaid-client-id', process.env.RADPLAID_CLIENT_ID)
+}

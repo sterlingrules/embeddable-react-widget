@@ -34,6 +34,7 @@ export const t = (data, targets) => {
 	targets = btoa(JSON.stringify(targets))
 
 	requestPublic({ path: `/analytics/track?data=${data}&targets=${targets}&device=${device}` })
+		.end()
 }
 
 /**
@@ -71,37 +72,37 @@ export const track = (name, data) => {
 	if (name && name.indexOf('show_item') >= 0) {
 		// Track impressions
 		if (data.action === 'impression') {
-			t({ action: 'impression', type: 'track', source: 'show_item' }, data)
+			t({ action: 'impression', type: 'track', source: 'widget' }, data)
 		}
 
 		// Track tickets
 		if (data.action === 'ticket') {
-			t({ action: 'ticket', type: 'click', source: 'show_item' }, data)
+			t({ action: 'ticket', type: 'click', source: 'widget' }, data)
 		}
 
 		// Track follow
 		if (data.action === 'follow') {
-			t({ action: 'follow', type: 'click', source: 'show_item' }, data)
+			t({ action: 'follow', type: 'click', source: 'widget' }, data)
 		}
 	}
 	else if (name && name.indexOf('show') >= 0) {
 		// Track event url
 		if (data.action === 'event_url') {
-			t({ action: 'event_url', type: 'click', source: 'show' }, data)
+			t({ action: 'event_url', type: 'click', source: 'widget' }, data)
 		}
 
 		// Track tickets
 		if (data.action === 'ticket') {
-			t({ action: 'ticket', type: 'click', source: 'show' }, data)
+			t({ action: 'ticket', type: 'click', source: 'widget' }, data)
 		}
 
 		// Track follow
 		if (data.action === 'follow') {
-			t({ action: 'follow', type: 'click', source: 'show' }, data)
+			t({ action: 'follow', type: 'click', source: 'widget' }, data)
 		}
 	}
 
 	if (name === 'share') {
-		t({ action: data.action, type: 'click', source: 'show' }, data)
+		t({ action: data.action, type: 'click', source: 'widget' }, data)
 	}
 }
