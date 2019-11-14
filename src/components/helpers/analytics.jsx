@@ -51,17 +51,19 @@ export const track = (name, data) => {
 		return
 	}
 
-	// Tracking Warnings
-	if (!data.action) {
-		console.warn('`:action` param required. The type of interaction (e.g. \'play\')')
-	}
+	if (process.env.NODE_ENV === 'development') {
+		// Tracking Warnings
+		if (!data.action) {
+			console.warn('`:action` param required. The type of interaction (e.g. \'play\')')
+		}
 
-	if (!data.label) {
-		console.warn('`:label` param recommended. Useful for categorizing events (e.g. \'Fall Campaign\')')
-	}
+		if (!data.label) {
+			console.warn('`:label` param recommended. Useful for categorizing events (e.g. \'Fall Campaign\')')
+		}
 
-	if (!data.value) {
-		console.warn('`:value` param recommended. Typically the object that was interacted with (e.g. \'Video\')')
+		if (!data.value) {
+			console.warn('`:value` param recommended. Typically the object that was interacted with (e.g. \'Video\')')
+		}
 	}
 
 	// Track plays
